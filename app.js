@@ -1,13 +1,7 @@
 const morgan = require('morgan');
 const express = require('express');
 const app= express();
-const rota_produtos = require('./api/routs/products');
-const rota_ordens = require('./api/routs/orders');
 const rota_usuarios= require('./api/routs/Users');
-const rota_contas= require('./api/routs/accounts')
-const rota_fundos=require('./api/routs/fund')
-const rota_empreendimento = require('./api/routs/estate')
-const rota_cota =  require('./api/routs/quota')
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
@@ -22,6 +16,7 @@ app.use(bodyParser.json());
 // Headers para prevenção de CORS errors
 app.use((req,res,next)=>{
     res.header("Access-Control-Allow-Origin","*");
+    res.header("Access-Control-Allow-Headers","Content-Type");
     res.header("Access-Controll-Allow-Headers", "Origin,X-Requested-With, Content-Type, Accept, Authorization");
     
     if(req.method === 'OPTIONS'){
@@ -31,13 +26,7 @@ app.use((req,res,next)=>{
     next();
 });
 //rotas concretas
-app.use('/products',rota_produtos);
-app.use('/orders',rota_ordens);
 app.use('/users',rota_usuarios);
-app.use('/accounts',rota_contas);
-app.use('/funds',rota_fundos)
-app.use('/estate',rota_empreendimento)
-app.use('/quota',rota_cota)
 //rota fall-back
 app.use((req,res,next)=>{
     const error = new Error('Not ound');

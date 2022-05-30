@@ -3,7 +3,7 @@ const userModel = require('../models/userModel')
 const bcrypt = require('bcrypt');//boiblioteca para  criptografar a password
 const jwt = require('jsonwebtoken')
 
-exports.signup=(req,res,next)=>{
+exports.registar=(req,res,next)=>{
     userModel.find({email: req.body.email}).exec()
     .then(user=>{
         if(user.length>=1){
@@ -20,8 +20,8 @@ exports.signup=(req,res,next)=>{
                 }else{
                     const user = new userModel({
                         _id: new mongoose.Types.ObjectId(),
-                        name:     req.body.name,
-                        phone:    req.body.phone,
+                        nome:     req.body.nome,
+                        tipo:     req.body.tipo,
                         email:    req.body.email,
                         password: hash
                     }); 
@@ -31,11 +31,11 @@ exports.signup=(req,res,next)=>{
                         console.log(result);
                         res.status(200).json({ 
                             message: "Novo usuario" ,
-                            produto_criado: {
-                                id:    result._id,
-                                name:  result.name,
-                                phone: result.phone,
-                                email: result.email,
+                            user: {
+                                id:       result._id,
+                                nome:     result.nome,
+                                tipo:     result.tipo,
+                                email:    result.email,
                                 password: result.password,
                                 GET_URL: 'http://localhost:4000/users/'+result._id
                             }
@@ -53,7 +53,7 @@ exports.signup=(req,res,next)=>{
     })
 }
 
-exports.login=(req,res,next)=>{
+exports.autenticar=(req,res,next)=>{
 
     userModel.find({email: req.body.email})
     .exec()
@@ -96,9 +96,9 @@ exports.login=(req,res,next)=>{
     .catch(err=>{console.log("erro generico")})
 }
 
-exports.get_all_users=(req,res,next)=>{
+exports.listar=(req,res,next)=>{
     userModel.find()
-    .select('name phone email password')
+    .select('nome tipo email password')
     .exec()
     .then(doc=>{
         const resposta={
@@ -107,7 +107,7 @@ exports.get_all_users=(req,res,next)=>{
                 return{
                     id: doc._id,
                     name: doc.name,
-                    phone: doc.phone,
+                    tipo: doc.tipo,
                     email: doc.email,
                     password: doc.password,
                     SPECIFIC_GET_URL: 'http://localhost:4000/users/'+doc._id
@@ -116,7 +116,7 @@ exports.get_all_users=(req,res,next)=>{
         }
        console.log("da base de dados",doc) ;
        //res.status(200).json(resposta.usr);
-       res.status(200).json(resposta);
+       res.status(200).json(resposta.usr);
        
     })
     .catch(err=>{ 
@@ -125,13 +125,13 @@ exports.get_all_users=(req,res,next)=>{
     });
 }
 
-exports.delete_user=(req,res,next)=>{
-    
-    userModel.remove({phone:req.params.phone})
+exports.eliminar=(req,res,next)=>{
+    //eliminar por _id
+    userModel.remove({_id:req.params._id})
     .exec()
     .then( result=> {
             res.status(200).json({
-                message : "deleted",
+                message : "Usuário eliminado",
                 result: result
             })
         }
