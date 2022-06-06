@@ -2,17 +2,24 @@ const morgan = require('morgan');
 const express = require('express');
 const app= express();
 const rota_usuarios= require('./api/routs/Users');
+
+const rota_contactos= require('./api/routs/contacto');
+const rota_empresa= require('./api/routs/empresa');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 //conexão com mongodb 
-mongoose.connect('mongodb+srv://jerry:'+process.env.password+'@funds.j0vmf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+mongoose.connect('mongodb+srv://jerry:'+process.env.password+'@funds.j0vmf.mongodb.net/bills_db?retryWrites=true&w=majority'
 );
+
+
 //controlador de logs
 app.use(morgan('dev'));
+
 //body parser
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
+
 // Headers para prevenção de CORS errors
 app.use((req,res,next)=>{
     res.header("Access-Control-Allow-Origin","*");
@@ -25,9 +32,15 @@ app.use((req,res,next)=>{
     }
     next();
 });
+
 //rotas concretas
-app.use('/users',rota_usuarios);
-//rota fall-back
+
+app.use('/user',rota_usuarios);
+app.use('/contacto',rota_contactos);
+app.use('/empresa',rota_empresa);
+
+//rotas fall-back
+
 app.use((req,res,next)=>{
     const error = new Error('Not ound');
     error.status= 404;
