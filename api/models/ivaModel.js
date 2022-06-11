@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 const ivaModel=mongoose.Schema({
     _id:            mongoose.Schema.Types.ObjectId,
-    valor_em_vigor: {type: Number, required:true, default: 0.17}, 
-    data:           {type: Number, required}
+    valor_em_vigor: {type: Number, required:true}, 
+    data:           {type: String, required:true}
 })
 
 module.exports= mongoose.model('iva',ivaModel);

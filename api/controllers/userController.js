@@ -106,7 +106,7 @@ exports.listar=(req,res,next)=>{
             usr: doc.map(doc=>{
                 return{
                     id: doc._id,
-                    name: doc.name,
+                    nome: doc.nome,
                     tipo: doc.tipo,
                     email: doc.email,
                     password: doc.password,
@@ -143,4 +143,41 @@ exports.eliminar=(req,res,next)=>{
         })
     })
     
+}
+
+exports.actualizar_usuario=(req,res,next)=>{
+     /*
+      Passe o _id como parametro na url, 
+      assim: http://localhost:4000/user/actualizar/_id  e
+      forneça o nome do atributo que pretende alterar no campo propName e seu novo valor no campo value
+      em forma de lista, assim: 
+      [
+        {
+            propName: email,
+            value: vera@gmail.com
+        }
+      ]
+    */ 
+    const id = req.params._id; 
+    const updateOps={};
+
+    for(const ops of req.body ){
+       updateOps[ops.propName] = ops.value;
+    }
+    userModel.update({_id: id},{$set:updateOps})
+     .exec()
+     .then(result=> {
+            res.status(200).json({
+                message: "Usuário actualizado" ,
+                produto_actualizado: {
+                    name: result.name,
+                    price: result.price,
+                    GET_URL: 'http://localhost:4000/products/'+id
+                }
+            })
+        })
+     .catch(err=>{
+         console.log(err);
+         res.status(500).json({error:err})
+      })
 }

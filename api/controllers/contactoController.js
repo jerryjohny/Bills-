@@ -35,16 +35,18 @@ exports.registarContacto=(req,res,next)=>{
 
 exports.listarContactos=(req,res,next)=>{
     contactoModel.find()
+    //.populate("empresa")
     .exec()
     .then(doc=>{
         const resposta={
             count: doc.length,
             contacto: doc.map(doc=>{
                 return{
-                    telemovel:  doc.telemovel,
-                    email:    doc.email,
-                    empresa: doc.empresa,
-                    SPECIFIC_GET_URL: 'http://localhost:3000/obras/'+doc._id
+                    _id:       doc._id,
+                    telemovel: doc.telemovel,
+                    email:     doc.email,
+                    empresa:   doc.empresa,
+                    SPECIFIC_GET_URL: 'http://localhost:4000/contacto/'+doc._id
                 }
             })
         }
@@ -58,7 +60,7 @@ exports.listarContactos=(req,res,next)=>{
 }
 
 exports.editarContacto=(req,res,next)=>{
-    const id = req.params.id; 
+    const id = req.params._id; 
     const updateOps={};
 
     for(const ops of req.body ){
@@ -68,7 +70,7 @@ exports.editarContacto=(req,res,next)=>{
      .exec()
      .then(result=> {
             res.status(200).json({
-                message: "Obra actualizada" ,
+                message: "Contacto actualizado" ,
                 contacto_actualizado: {
                     telemovel: result.designacao,
                     email: result.detalhes,

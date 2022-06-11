@@ -6,6 +6,8 @@ router.post('/registar',userController.registar);
 router.post('/autenticar',userController.autenticar)
 router.get('/listar',userController.listar);
 router.delete('/eliminar/:_id',userController.eliminar);
+router.patch('/actualizar/:_id',userController.actualizar_usuario);
+
 
 
 module.exports= router
