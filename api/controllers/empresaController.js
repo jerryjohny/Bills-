@@ -7,13 +7,13 @@ const jwt = require('jsonwebtoken')
 exports.registarEmpresa=(req,res,next)=>{
     const empresa = new empresaModel({
         _id: new mongoose.Types.ObjectId(),
-        nome:  req.body.nome,
-        cod_actiividade_economica:    req.body.cod_actiividade_economica,
-        ordem_ucursal: req.body.ordem_ucursal,
-        nuit: req.body.nuit,
-        area_fiscal: req.body.area_fiscal,
-        num_entrada: req.body.num_entrada,
-        num_isercao: req.body.num_isercao
+        nome:                        req.body.nome,
+        cod_actiividade_economica:   req.body.cod_actiividade_economica,
+        ordem_ucursal:               req.body.ordem_ucursal,
+        nuit:                        req.body.nuit,
+        area_fiscal:                 req.body.area_fiscal,
+        num_entrada:                 req.body.num_entrada,
+        num_isercao:                 req.body.num_isercao
     });
     empresa
     .save()
