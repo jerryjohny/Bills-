@@ -1,30 +1,27 @@
 const mongoose = require('mongoose');//biblioteca para lidar com mongoDB
-const empresaModel = require('../models/empresaModel')
+const declaracaoModel = require('../models/declaracaoModel')
 const bcrypt = require('bcrypt');//boiblioteca para  criptografar a password
 const jwt = require('jsonwebtoken')
 
 
-exports.registarEmpresa=(req,res,next)=>{
-    const empresa = new empresaModel({
+exports.registarDeclaracao=(req,res,next)=>{
+    const declaracao = new declaracaoModel({
         _id: new mongoose.Types.ObjectId(),
-        nome:                        req.body.nome,
-        cod_actiividade_economica:   req.body.cod_actiividade_economica,
-        ordem_ucursal:               req.body.ordem_ucursal,
-        nuit:                        req.body.nuit,
-        area_fiscal:                 req.body.area_fiscal,
-        num_entrada:                 req.body.num_entrada,
-        num_isercao:                 req.body.num_isercao
+        empresa:  req.body.empresa,
+        tipo_declaracao:    req.body.tipo_declaracao,
+        num_entrada: req.body.num_entrada,
+        num_insercao: req.body.num_insercao
     });
-    empresa
+    declaracao
     .save()
     .then(result=>{
         console.log(result);
         res.status(200).json({ 
-            message: "Empresa Registada" ,
-            empresa: {
-                nome: result.nome,
-                num_entrada:      result.num_entrada,
-                GET_URL: 'http://localhost:4000/empresa/'+result._id
+            message: "Declaracao Registada" ,
+            localizacao: {
+                tipo_declaracao: result.tipo_declaracao,
+                empresa:      result.empresa,
+                GET_URL: 'http://localhost:4000/declaracao/'+result._id
             }
         });
     })
@@ -35,9 +32,8 @@ exports.registarEmpresa=(req,res,next)=>{
         })
     });
 }
-exports.listarEmpresas=(req,res,next)=>{
-    empresaModel.find()
-    .select('nome area_fiscal nuit')
+exports.listarDeclaracao=(req,res,next)=>{
+    declaracaoModel.find()
     .exec()
     .then(doc=>{
         const resposta={
@@ -45,10 +41,12 @@ exports.listarEmpresas=(req,res,next)=>{
             usr: doc.map(doc=>{
                 return{
                     id: doc._id,
-                    nome: doc.nome,
-                    nuit: doc.nuit,
-                    area_fiscal: doc.area_fiscal,
-                    SPECIFIC_GET_URL: 'http://localhost:4000/users/'+doc._id
+                    empresa:    doc.empresa,
+                    tipo_declaracao:     doc.tipo_declaracao,
+                    num_entrada:       doc.num_entrada,
+                    num_insercao:      doc.num_insercao,
+                    edificio_num: doc.edificio_num,
+                    SPECIFIC_GET_URL: 'http://localhost:4000/declaracao/'+doc._id
                 }
             })
         }
@@ -62,13 +60,13 @@ exports.listarEmpresas=(req,res,next)=>{
         res.status(500).json({error:err});
     });
 }
-exports.eliminarEmpresa=(req,res,next)=>{
+exports.eliminarDeclaracao=(req,res,next)=>{
     //eliminar por _id
-    empresaModel.remove({_id:req.params._id})
+    declaracaoModel.remove({_id:req.params._id})
     .exec()
     .then( result=> {
             res.status(200).json({
-                message : "Empresa eliminada",
+                message : "Localizacao eliminada",
                 result: result
             })
         }
@@ -81,7 +79,7 @@ exports.eliminarEmpresa=(req,res,next)=>{
     })
     
 }
-exports.actualizarEmpresa=(req,res,next)=>{
+exports.actualizarLocalozacao=(req,res,next)=>{
      /*
       Passe o _id como parametro na url, 
       assim: http://localhost:4000/empresa/actualizar/_id  e
@@ -89,8 +87,8 @@ exports.actualizarEmpresa=(req,res,next)=>{
       em forma de lista, assim: 
       [
         {
-            propName: nome,
-            value: Mozal
+            propName: tipo_declaracao,
+            value: "..."
         }
       ]
     */ 
@@ -100,15 +98,14 @@ exports.actualizarEmpresa=(req,res,next)=>{
     for(const ops of req.body ){
        updateOps[ops.propName] = ops.value;
     }
-    empresaModel.update({_id: id},{$set:updateOps})
+    declaracaoModel.update({_id: id},{$set:updateOps})
      .exec()
      .then(result=> {
             res.status(200).json({
-                message: "Empresa actualizada" ,
-                produto_actualizado: {
-                    nome: result.nome,
-                    nuit: result.nuit,
-                    GET_URL: 'http://localhost:4000/empresa/'+id
+                message: "Localizacao actualizada" ,
+                localizacao: {
+                    tipo_declaracao: result.tipo_declaracao,
+                    GET_URL: 'http://localhost:4000/localizacao/'+id
                 }
             })
         })

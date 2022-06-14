@@ -5,7 +5,7 @@ const declaracaoModel=mongoose.Schema({
     empresa:                  {type: mongoose.Schema.Types.ObjectId, ref: 'empresa',required: true}, 
     tipo_declaracao:          {type: String, required: true},
     num_entrada:              {type: String, required: true},
-    num_isercao:              {type: String, required: true}
+    num_insercao:             {type: String, required: true}
 
 })
 

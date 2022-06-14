@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const localizacaoModel=mongoose.Schema({
     _id:          mongoose.Schema.Types.ObjectId,
+    empresa:       {type: mongoose.Schema.Types.ObjectId, ref: 'empresa',required: true},
     provincia:     {type: String, required: true}, 
     distrito:      {type: String, required: true},
     bairro:        {type: String, required: true}, 
