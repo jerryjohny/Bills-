@@ -23,7 +23,8 @@ exports.registar=(req,res,next)=>{
                         nome:     req.body.nome,
                         tipo:     req.body.tipo,
                         email:    req.body.email,
-                        password: hash
+                        // password: hash
+                        password: req.body.password
                     }); 
                     user
                     .save()
